@@ -1,0 +1,10 @@
+{
+  "update": {
+    "header": "Update Todo",
+    "body": "Are you sure you want to update"
+  },
+  "delete": {
+    "header": "Delete Todo",
+    "body": "Are you sure you want to delete"
+  }
+}

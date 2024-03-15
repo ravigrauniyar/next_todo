@@ -1,0 +1,27 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1710487723873,
+      "tag": "0000_striped_kylun",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710502045388,
+      "tag": "0001_remarkable_malice",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1710511673402,
+      "tag": "0002_petite_sheva_callister",
+      "breakpoints": true
+    }
+  ]
+}
