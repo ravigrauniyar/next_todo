@@ -1,7 +1,8 @@
 "use server";
-import { Todo, ViewTodo, todos } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
+
 import { db } from "./drizzle";
+import { eq } from "drizzle-orm";
+import { Todo, ViewTodo, todos } from "@/drizzle/schema";
 
 export const createTodo = async (todo: ViewTodo) => {
   return await db.insert(todos).values(todo);

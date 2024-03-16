@@ -1,22 +1,25 @@
 "use client";
+
 import "@/app/globals.css";
-import priorities from "@/utils/PrioritiesData.json";
 import moment from "moment";
+import Form from "@/components/Form";
 import Modal from "@/components/Modal";
 import { Todo } from "@/drizzle/schema";
-import { deleteTodo, readTodoDetails } from "@/database/operations";
-import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import priorities from "@/utils/PrioritiesData.json";
+import { useSearchParams, useRouter } from "next/navigation";
+import { deleteTodo, readTodoDetails } from "@/database/operations";
 
-export default function Details() {
-  const params = useSearchParams();
-  const id = params.get("id");
+export default function View() {
   const router = useRouter();
+  const params = useSearchParams();
 
+  const [todo, setTodo] = useState<Todo | null>(null);
+  const [isUpdateFormActive, setIsUpdateFormActive] = useState<boolean>(false);
   const [isDeleteModalActive, setIsDeleteModalActive] =
     useState<boolean>(false);
-  const [todo, setTodo] = useState<Todo | null>(null);
 
+  const id = params.get("id");
   useEffect(() => {
     readTodoDetails(id! as string).then((todoDetail: Todo | undefined) => {
       if (todoDetail) {
@@ -32,17 +35,18 @@ export default function Details() {
     setIsDeleteModalActive(false);
     router.push("/todos");
   };
-
   const btnStyles = "text-black border-b cursor-pointer hover:text-white";
 
   return (
     todo && (
       <div className="flex-center h-screen">
-        {!isDeleteModalActive ? (
+        <title>View | TODO</title>
+        {!isDeleteModalActive && !isUpdateFormActive ? (
           <div className="flex flex-col p-5 bg-gray-600 w-[400px] rounded-sm gap-5">
             <div className="text-[32px] font-[500] text-center">Todo</div>
             <div>{todo.title}</div>
             {todo.description && <div>{todo.description}</div>}
+
             <div>Priority: {priorities[todo.priority!]}</div>
             <div>Status: {todo.isCompleted ? "Completed" : "Pending"}</div>
             <div>
@@ -52,9 +56,10 @@ export default function Details() {
               Last updated:{" "}
               {moment(todo.updated_at).format("hh:mm A, DD MMM YYYY")}
             </div>
+
             <div className="flex gap-5">
               <div
-                onClick={() => router.push(`/todos/update?id=${id}`)}
+                onClick={() => setIsUpdateFormActive(true)}
                 className={btnStyles}
               >
                 Update
@@ -70,13 +75,15 @@ export default function Details() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : isDeleteModalActive ? (
           <Modal
             type="delete"
             title={todo.title!}
             onConfirm={() => handleDelete()}
             onCancel={() => setIsDeleteModalActive(false)}
           />
+        ) : (
+          <Form type="Update" onReturn={() => setIsUpdateFormActive(false)} />
         )}
       </div>
     )
