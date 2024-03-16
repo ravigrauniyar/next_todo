@@ -19,6 +19,7 @@ export default function Form(props: FormProps) {
   const title = type === "New" ? FormTitle.New : FormTitle.Update;
   const handleReturn = () => (type === "New" ? router.back() : onReturn!());
 
+  const [currentTitle, setCurrentTitle] = useState<string>("");
   const [todoItem, setTodoItem] = useState<ViewTodo>({
     id: uuidv4(),
     title: "",
@@ -37,6 +38,7 @@ export default function Form(props: FormProps) {
       readTodoDetails(id as string).then((todoDetail: Todo | undefined) => {
         if (todoDetail) {
           setTodoItem(todoDetail);
+          setCurrentTitle(todoDetail.title!);
         }
       });
     }
@@ -146,7 +148,7 @@ export default function Form(props: FormProps) {
       ) : (
         <Modal
           type="Update"
-          title={todoItem.title!}
+          title={currentTitle}
           onConfirm={() => handleUpdateTodo()}
           onCancel={() => setIsUpdateModalActive(false)}
         />
