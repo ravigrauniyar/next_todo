@@ -4,100 +4,118 @@ import _ from "lodash";
 import "@/app/globals.css";
 import Modal from "./Modal";
 import { v4 as uuidv4 } from "uuid";
+import { Todo } from "@/drizzle/schema";
+import { useParams } from "next/navigation";
 import { FormTitle } from "./constants.enum";
-import { Todo, ViewTodo } from "@/drizzle/schema";
+import { useTodo } from "@/shared/TodoProvider";
 import priorities from "@/utils/PrioritiesData.json";
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useTodoRouter } from "@/shared/RouterProvider";
+import { useFlagStates } from "@/shared/FlagStatesProvider";
 import { createTodo, readTodoDetails, updateTodo } from "@/database/operations";
 
-export default function Form(props: FormProps) {
-  const router = useRouter();
-  const params = useSearchParams();
+export default function Form({ type }: FormProps) {
+  const { handleReturn, handleRedirect } = useTodoRouter()!;
+  const params = useParams<{ id: string }>();
 
-  const { type, onReturn } = props;
-  const title = type === "New" ? FormTitle.New : FormTitle.Update;
-  const handleReturn = () => (type === "New" ? router.back() : onReturn!());
+  const formTitle = type === "New" ? FormTitle.New : FormTitle.Update;
+  const currentTodoTitle = useTodo()?.todo?.title;
 
-  const [currentTitle, setCurrentTitle] = useState<string>("");
-  const [todoItem, setTodoItem] = useState<ViewTodo>({
-    id: uuidv4(),
-    title: "",
-    description: "",
-    priority: 0,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    isCompleted: false,
-  });
-  const [isUpdateModalActive, setIsUpdateModalActive] =
-    useState<boolean>(false);
+  const { flagStates, setFlagStates } = useFlagStates()!;
+  const isUpdateModalOpen = flagStates.isUpdateModalOpen;
+  const { todoForFormValues, setTodoForFormValues } = useTodo()!;
 
-  const id = params.get("id");
+  const id = params.id;
   useEffect(() => {
     if (type === "Update" && id) {
       readTodoDetails(id as string).then((todoDetail: Todo | undefined) => {
         if (todoDetail) {
-          setTodoItem(todoDetail);
-          setCurrentTitle(todoDetail.title!);
+          setTodoForFormValues(todoDetail);
         }
       });
     }
-  }, [id, type]);
+  }, [id, type, setTodoForFormValues]);
 
+  const handleCancel = () => {
+    return type === "New"
+      ? handleReturn()
+      : setFlagStates({
+          ...flagStates,
+          isUpdateFormOpen: false,
+        });
+  };
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (type === "New") {
-      await createTodo(todoItem);
-      router.push("/todos");
+      await createTodo({
+        ...todoForFormValues,
+        id: uuidv4(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      handleRedirect("/todos");
     } else {
-      setIsUpdateModalActive(true);
+      setFlagStates({
+        ...flagStates,
+        isUpdateModalOpen: true,
+      });
     }
   };
   const handleUpdateTodo = async () => {
-    const todo = { ...todoItem, updated_at: new Date().toISOString() };
+    const todo = { ...todoForFormValues, updated_at: new Date().toISOString() };
     await updateTodo(todo);
-    setIsUpdateModalActive(false);
-    onReturn!();
+
+    setFlagStates({
+      ...flagStates,
+      isUpdateFormOpen: false,
+      isUpdateModalOpen: false,
+    });
   };
   const elementStyles =
     "w-full h-[40px] outline-none focus:outline-none px-3 rounded-md";
 
   return (
     <div className="flex-center h-screen">
-      {!isUpdateModalActive ? (
+      {!isUpdateModalOpen ? (
         <form
           onSubmit={handleSubmit}
           className="flex flex-col bg-gray-600 rounded-sm px-3 py-5 gap-5"
         >
-          <div className="text-[30px] font-[500] text-center">{title}</div>
+          <div className="text-[30px] font-[500] text-center">{formTitle}</div>
           <input
             type="text"
-            value={todoItem.title!}
+            value={todoForFormValues.title!}
             className={`${elementStyles} text-black`}
             placeholder="Title"
             onChange={(e) =>
-              setTodoItem({ ...todoItem, title: e.target.value })
+              setTodoForFormValues({
+                ...todoForFormValues,
+                title: e.target.value,
+              })
             }
             required
           />
           <textarea
             className={`${elementStyles} pt-2 text-black min-h-[100px]`}
-            value={todoItem.description!}
+            value={todoForFormValues.description!}
             placeholder="Description"
             onChange={(e) =>
-              setTodoItem({ ...todoItem, description: e.target.value })
+              setTodoForFormValues({
+                ...todoForFormValues,
+                description: e.target.value,
+              })
             }
           />
           <div className="w-full">
             <div className="mb-2 font-[500]">Priority</div>
             <select
               name="priority"
-              value={priorities[todoItem.priority!]}
+              value={priorities[todoForFormValues.priority!]}
               id="priority"
               className={`${elementStyles} bg-white text-black`}
               onChange={(e) =>
-                setTodoItem({
-                  ...todoItem,
+                setTodoForFormValues({
+                  ...todoForFormValues,
                   priority: _.findIndex(
                     priorities,
                     (priority) => priority === e.target.value
@@ -119,11 +137,11 @@ export default function Form(props: FormProps) {
               <input
                 type="checkbox"
                 className="w-[16px] h-[16px] mr-2 mt-[-3px]"
-                checked={todoItem.isCompleted!}
+                checked={todoForFormValues.isCompleted!}
                 onChange={() =>
-                  setTodoItem({
-                    ...todoItem,
-                    isCompleted: !todoItem.isCompleted,
+                  setTodoForFormValues({
+                    ...todoForFormValues,
+                    isCompleted: !todoForFormValues.isCompleted,
                   })
                 }
               />
@@ -138,19 +156,24 @@ export default function Form(props: FormProps) {
               Submit
             </button>
             <button
-              onClick={handleReturn}
+              onClick={handleCancel}
               className="btn flex-center bg-red-500 hover:bg-red-600"
             >
-              Return
+              Cancel
             </button>
           </div>
         </form>
       ) : (
         <Modal
           type="Update"
-          title={currentTitle}
+          title={currentTodoTitle!}
           onConfirm={() => handleUpdateTodo()}
-          onCancel={() => setIsUpdateModalActive(false)}
+          onCancel={() =>
+            setFlagStates({
+              ...flagStates,
+              isUpdateModalOpen: false,
+            })
+          }
         />
       )}
     </div>

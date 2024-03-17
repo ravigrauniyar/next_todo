@@ -44,6 +44,9 @@
       "@/todos/*": [
         "./app/todos/*"
       ],
+      "@/shared/*": [
+        "./app/shared/*"
+      ],
       "@/utils/*": [
         "./app/utils/*"
       ],

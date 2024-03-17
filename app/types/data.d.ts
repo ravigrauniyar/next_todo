@@ -1,6 +1,5 @@
 type FormProps = {
   type: string;
-  onReturn?: () => void;
 };
 
 type ModalTypeProps = {
@@ -13,4 +12,14 @@ type ModalTypeProps = {
 type ModalProps = {
   header: string;
   body: string;
+};
+
+type ProviderProps = {
+  children: React.ReactNode;
+};
+
+type FlagStates = {
+  isUpdateModalOpen: boolean;
+  isUpdateFormOpen: boolean;
+  isDeleteModalOpen: boolean;
 };

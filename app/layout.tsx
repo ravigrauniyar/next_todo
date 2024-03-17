@@ -1,13 +1,13 @@
 "use client";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { Provider } from "@/shared/Provider";
+
+export default function RootLayout({ children }: ProviderProps) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Provider>{children}</Provider>
+      </body>
     </html>
   );
 }

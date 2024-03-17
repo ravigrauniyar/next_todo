@@ -1,19 +1,22 @@
 "use client";
 
-import { ViewTodo } from "@/drizzle/schema";
+import { Todo } from "@/drizzle/schema";
 import { StatusColor } from "./constants.enum";
 import priorities from "@/utils/PrioritiesData.json";
+import { useTodoRouter } from "@/shared/RouterProvider";
 
 type TodoItemProps = {
-  todo: ViewTodo;
-  handleClick: (route: string) => void;
+  todo: Todo;
 };
-export function TodoItem(props: TodoItemProps) {
-  const { id, title, description, priority, isCompleted } = props.todo;
+
+export function TodoItem({ todo }: TodoItemProps) {
+  const { handleRedirect } = useTodoRouter()!;
+  const { id, title, description, priority, isCompleted } = todo;
   const statusColor = isCompleted ? StatusColor.Completed : StatusColor.Pending;
+
   return (
     <div
-      onClick={() => props.handleClick(`/todos/view?id=${id}`)}
+      onClick={() => handleRedirect(`/todos/view/${id}`)}
       className="flex flex-col p-3 border-b cursor-pointer"
     >
       <div className="flex justify-between mb-2 text-[18px]">

@@ -3,23 +3,17 @@
 import _ from "lodash";
 import "@/app/globals.css";
 import Image from "next/image";
+import { Todo } from "@/drizzle/schema";
 import Loading from "@/icons/Loading.svg";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTodo } from "@/shared/TodoProvider";
 import { TodoItem } from "@/components/TodoItem";
 import { readTodos } from "@/database/operations";
-import { Todo, ViewTodo } from "@/drizzle/schema";
+import { useTodoRouter } from "@/shared/RouterProvider";
 
-type TodoItemProps = {
-  todo: ViewTodo;
-  handleClick: (route: string) => void;
-};
 export default function TodoList() {
-  const router = useRouter();
-  const handleRedirect = (route: string) => {
-    router.push(route);
-  };
-  const [todos, setTodos] = useState<Todo[] | null>(null);
+  const { todos, setTodos } = useTodo()!;
+  const { handleRedirect } = useTodoRouter()!;
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -30,7 +24,7 @@ export default function TodoList() {
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
-  }, []);
+  }, [setTodos]);
 
   const scrollBarStyles =
     "scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-600";
@@ -52,13 +46,9 @@ export default function TodoList() {
                 TODO List
               </div>
               {_.map(todos, (todo) => {
-                const props: TodoItemProps = {
-                  todo: todo,
-                  handleClick: handleRedirect,
-                };
                 return (
                   <div key={todo.id}>
-                    <TodoItem {...props} />
+                    <TodoItem todo={todo} />
                   </div>
                 );
               })}
