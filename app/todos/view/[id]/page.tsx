@@ -15,23 +15,49 @@ import priorities from "@/utils/PrioritiesData.json";
 import { useTodoRouter } from "@/shared/RouterProvider";
 import { useFlagStates } from "@/shared/FlagStatesProvider";
 import { deleteTodo, readTodoDetails } from "@/database/operations";
-
-export default function View() {
+/**
+ * ViewTodo: Represents the component for viewing a single todo item.
+ *
+ * Hooks Used:
+ * - useTodoRouter: A hook for handling routing related to todo items.
+ * - useParams: A hook for accessing parameters from the URL.
+ * - useTodo: A hook for accessing todo-related context or state.
+ * - useState: A hook for managing component state.
+ * - useEffect: A hook for handling side effects in function components.
+ * - useFlagStates: A hook for accessing flag states related to the component.
+ *
+ * Actions:
+ * - Retrieves the todo item details based on the provided ID when the component mounts.
+ * - Sets loading state while fetching data.
+ * - Redirects to the todos page if the todo item does not exist.
+ * - Handles deletion of the todo item.
+ *
+ * Returns:
+ * - A page title and the view of the todo item.
+ */
+export default function ViewTodo() {
+  // Accessing router-related functions
   const { handleRedirect } = useTodoRouter()!;
   const params = useParams<{ id: string }>();
 
+  // Accessing todo-related context and state
   const { todo, setTodo } = useTodo()!;
+
+  // Managing loading state
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Accessing flag states and related functions
   const { flagStates, setFlagStates } = useFlagStates()!;
   const { isUpdateFormOpen, isDeleteModalOpen } = flagStates;
 
   const id = params.id;
+
+  // Fetch todo item details when the component mounts
   useEffect(() => {
     if (!isUpdateFormOpen) {
       setLoading(true);
 
-      readTodoDetails(id! as string)
+      readTodoDetails(id!)
         .then((todoDetail: Todo | undefined) => {
           if (todoDetail) {
             setTodo(todoDetail);
@@ -44,18 +70,23 @@ export default function View() {
     }
   }, [id, isUpdateFormOpen, setTodo, handleRedirect]);
 
+  // Function to set delete modal open/close state
   const setIsDeleteModalOpen = (value: boolean) => {
     setFlagStates({
       ...flagStates,
       isDeleteModalOpen: value,
     });
   };
+
+  // Function to handle deletion of the todo item
   const handleDelete = async () => {
     await deleteTodo(id!);
     setLoading(true);
     setIsDeleteModalOpen(false);
     handleRedirect("/todos");
   };
+
+  // Inline styles for buttons
   const btnStyles = "text-black border-b cursor-pointer hover:text-white";
 
   return (

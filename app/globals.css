@@ -1,3 +1,17 @@
+/**
+ * CSS Configuration
+ * 
+ * This configuration file sets up Tailwind CSS, a utility-first CSS framework.
+ * It includes base styles, components, and utilities provided by Tailwind CSS.
+ * 
+ * Base Styles:
+ * - Sets the background color, text color, font size, line height, and letter spacing for the body element.
+ * 
+ * Custom Classes:
+ * - .flex-center: A custom class that sets the display to flex and centers the content both horizontally and vertically.
+ * - .btn: A custom class for buttons, setting width, height, text color, and border radius.
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -11,11 +11,32 @@ import { TodoItem } from "@/components/TodoItem";
 import { readTodos } from "@/database/operations";
 import { useTodoRouter } from "@/shared/RouterProvider";
 
+/**
+ * TodoList: Represents the component for displaying a list of todo items.
+ *
+ * Hooks Used:
+ * - useState: A hook for managing component state.
+ * - useEffect: A hook for handling side effects in function components.
+ * - useTodo: A hook for accessing todo-related context or state.
+ * - useTodoRouter: A hook for handling routing related to todo items.
+ *
+ * Actions:
+ * - Fetches todo items from the database when the component mounts.
+ *
+ * Returns:
+ * - A page title and a list of todo items with an option to add a new todo.
+ */
 export default function TodoList() {
+  // Accessing todo-related context and state
   const { todos, setTodos } = useTodo()!;
+
+  // Accessing router-related functions
   const { handleRedirect } = useTodoRouter()!;
+
+  // Managing loading state
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Fetch todo items from the database when the component mounts
   useEffect(() => {
     setLoading(true);
     readTodos()
@@ -26,6 +47,7 @@ export default function TodoList() {
       .finally(() => setLoading(false));
   }, [setTodos]);
 
+  // Inline styles for scrollbar
   const scrollBarStyles =
     "scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-600";
 
@@ -45,13 +67,11 @@ export default function TodoList() {
               <div className="font-[500] text-[20px] text-center">
                 TODO List
               </div>
-              {_.map(todos, (todo) => {
-                return (
-                  <div key={todo.id}>
-                    <TodoItem todo={todo} />
-                  </div>
-                );
-              })}
+              {_.map(todos, (todo) => (
+                <div key={todo.id}>
+                  <TodoItem todo={todo} />
+                </div>
+              ))}
             </div>
           )}
           <button

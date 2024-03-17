@@ -3,15 +3,30 @@
 import { HeaderColor } from "./constants.enum";
 import modalProps from "@/utils/ModalPropsData.json";
 
+/**
+ * Modal: Represents a reusable modal component for displaying confirmation dialogs.
+ *
+ * Props:
+ * - modalTypeProps: An object containing modal type, title, onConfirm, and onCancel functions.
+ *
+ * Returns:
+ * - A modal dialog with specified header, body, and action buttons.
+ */
 export default function Modal(modalTypeProps: ModalTypeProps) {
+  // Destructuring modalTypeProps object
   const { type, title, onConfirm, onCancel } = modalTypeProps;
+
+  // Determining modal properties based on type
   const props: ModalProps =
     type === "Update" ? modalProps.update : modalProps.delete;
 
+  // Determining header color based on type
   const headerColor =
     type === "Update" ? HeaderColor.Update : HeaderColor.Delete;
 
+  // Destructuring props object
   const { header, body } = props;
+
   return (
     <div className="absolute top-0 left-0 z-10 flex-center w-full h-[100vh] bg-[#ffffff1a]">
       <div className="w-[500px] min-h-[250px] flex flex-col rounded-md shadow-md bg-gray-600 p-5">

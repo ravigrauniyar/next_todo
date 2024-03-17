@@ -5,13 +5,36 @@ import { StatusColor } from "./constants.enum";
 import priorities from "@/utils/PrioritiesData.json";
 import { useTodoRouter } from "@/shared/RouterProvider";
 
+/**
+ * TodoItemProps: Represents the props expected by the TodoItem component.
+ *
+ * Props:
+ * - todo: The todo item to be displayed by the TodoItem component.
+ */
 type TodoItemProps = {
   todo: Todo;
 };
 
+/**
+ * TodoItem: Represents the component for displaying an individual todo item.
+ *
+ * Props:
+ * - todo: The todo item to be displayed.
+ *
+ * Hooks Used:
+ * - useTodoRouter: A hook for handling routing related to todo items.
+ *
+ * Returns:
+ * - A clickable todo item with title, description, priority, and status.
+ */
 export function TodoItem({ todo }: TodoItemProps) {
+  // Accessing router-related functions
   const { handleRedirect } = useTodoRouter()!;
+
+  // Destructuring todo object
   const { id, title, description, priority, isCompleted } = todo;
+
+  // Determine status color based on completion status
   const statusColor = isCompleted ? StatusColor.Completed : StatusColor.Pending;
 
   return (

@@ -14,18 +14,48 @@ import { useTodoRouter } from "@/shared/RouterProvider";
 import { useFlagStates } from "@/shared/FlagStatesProvider";
 import { createTodo, readTodoDetails, updateTodo } from "@/database/operations";
 
+/**
+ * Form: Represents a form component used for creating or updating todo items.
+ *
+ * Props:
+ * - type: A string representing the type of form (e.g., "New" or "Update").
+ *
+ * Hooks Used:
+ * - useTodoRouter: A hook for handling routing related to todo items.
+ * - useParams: A hook for accessing parameters from the URL.
+ * - useTodo: A hook for accessing todo-related context or state.
+ * - useFlagStates: A hook for accessing flag states related to the form.
+ *
+ * Methods Used:
+ * - createTodo: An asynchronous function for creating a new todo item.
+ * - readTodoDetails: An asynchronous function for retrieving details of a todo item.
+ * - updateTodo: An asynchronous function for updating a todo item.
+ *
+ * Components Used:
+ * - Modal: A component for displaying a modal window.
+ */
 export default function Form({ type }: FormProps) {
+  // Access router-related functions and parameters from the URL
   const { handleReturn, handleRedirect } = useTodoRouter()!;
   const params = useParams<{ id: string }>();
 
+  // Determine the form title based on the form type
   const formTitle = type === "New" ? FormTitle.New : FormTitle.Update;
+
+  // Retrieve the title of the current todo item
   const currentTodoTitle = useTodo()?.todo?.title;
 
+  // Access flag states and the function to update them
   const { flagStates, setFlagStates } = useFlagStates()!;
   const isUpdateModalOpen = flagStates.isUpdateModalOpen;
+
+  // Access todo-related context and state
   const { todoForFormValues, setTodoForFormValues } = useTodo()!;
 
+  // Extract the todo item ID from the URL parameters
   const id = params.id;
+
+  // Fetch todo item details when the component mounts, if it's an update form
   useEffect(() => {
     if (type === "Update" && id) {
       readTodoDetails(id as string).then((todoDetail: Todo | undefined) => {
@@ -36,6 +66,13 @@ export default function Form({ type }: FormProps) {
     }
   }, [id, type, setTodoForFormValues]);
 
+  /**
+   * handleCancel: Handles the cancel action in the form.
+   *
+   * Returns:
+   * - If the form type is "New", calls the handleReturn function.
+   * - If the form type is not "New", updates flag states to close the update form.
+   */
   const handleCancel = () => {
     return type === "New"
       ? handleReturn()
@@ -44,6 +81,17 @@ export default function Form({ type }: FormProps) {
           isUpdateFormOpen: false,
         });
   };
+
+  /**
+   * handleSubmit: Handles form submission.
+   *
+   * @param e The form submit event.
+   *
+   * Actions:
+   * - Prevents the default form submission behavior.
+   * - If the form type is "New", creates a new todo item and redirects to the todos page.
+   * - If the form type is not "New", sets flag states to open the update modal.
+   */
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (type === "New") {
@@ -61,6 +109,14 @@ export default function Form({ type }: FormProps) {
       });
     }
   };
+
+  /**
+   * handleUpdateTodo: Handles updating an existing todo item.
+   *
+   * Actions:
+   * - Updates the todo item with the latest form values and current timestamp.
+   * - Updates flag states to close the update form and update modal.
+   */
   const handleUpdateTodo = async () => {
     const todo = { ...todoForFormValues, updated_at: new Date().toISOString() };
     await updateTodo(todo);
@@ -71,6 +127,8 @@ export default function Form({ type }: FormProps) {
       isUpdateModalOpen: false,
     });
   };
+
+  // Inline styles for form elements
   const elementStyles =
     "w-full h-[40px] outline-none focus:outline-none px-3 rounded-md";
 
