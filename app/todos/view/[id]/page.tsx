@@ -13,8 +13,9 @@ import { useEffect, useState } from "react";
 import { useTodo } from "@/shared/TodoProvider";
 import priorities from "@/utils/PrioritiesData.json";
 import { useTodoRouter } from "@/shared/RouterProvider";
+import { useDatabase } from "@/shared/DbContextProvider";
 import { useFlagStates } from "@/shared/FlagStatesProvider";
-import { deleteTodo, readTodoDetails } from "@/database/operations";
+
 /**
  * ViewTodo: Represents the component for viewing a single todo item.
  *
@@ -42,6 +43,7 @@ export default function ViewTodo() {
 
   // Accessing todo-related context and state
   const { todo, setTodo } = useTodo()!;
+  const { deleteTodo, readTodoDetails } = useDatabase()!;
 
   // Managing loading state
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,10 +67,10 @@ export default function ViewTodo() {
             handleRedirect("/todos");
           }
         })
-        .catch((error) => console.error(error))
+        .catch((error: Error) => console.error(error))
         .finally(() => setLoading(false));
     }
-  }, [id, isUpdateFormOpen, setTodo, handleRedirect]);
+  }, [id, isUpdateFormOpen, setTodo, handleRedirect, readTodoDetails]);
 
   // Function to set delete modal open/close state
   const setIsDeleteModalOpen = (value: boolean) => {

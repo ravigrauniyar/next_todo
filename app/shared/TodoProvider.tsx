@@ -32,7 +32,7 @@ export const todoExample: Todo = {
  * - setTodos: A function to update the array of todo items.
  * - setTodoForFormValues: A function to update the todo item used for form values.
  */
-type ContextProps = {
+type TodoContextProps = {
   todo: ViewTodo;
   todos: Todo[] | null;
   todoForFormValues: Todo;
@@ -44,7 +44,7 @@ type ContextProps = {
 /**
  * TodoContext: A context for managing todo-related state.
  */
-const TodoContext = createContext<ContextProps | null>(null);
+const TodoContext = createContext<TodoContextProps | null>(null);
 
 /**
  * useTodo: A custom hook to access the todo context.
@@ -67,7 +67,7 @@ export const TodoProvider = ({ children }: ProviderProps) => {
   const [todoForFormValues, setTodoForFormValues] = useState<Todo>(todoExample);
 
   // Create a shared context value
-  const shared: ContextProps = {
+  const shared: TodoContextProps = {
     todo,
     todos,
     todoForFormValues,

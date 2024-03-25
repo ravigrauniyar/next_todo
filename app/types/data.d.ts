@@ -59,3 +59,13 @@ type ModalProps = {
   header: string;
   body: string;
 };
+
+type Todo = {
+  id: string;
+  title: string;
+  description: string;
+  priority: number;
+  isCompleted: boolean;
+  created_at: string;
+  updated_at: string;
+};

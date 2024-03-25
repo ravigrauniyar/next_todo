@@ -7,12 +7,12 @@ import { v4 as uuidv4 } from "uuid";
 import { Todo } from "@/drizzle/schema";
 import { useParams } from "next/navigation";
 import { FormTitle } from "./constants.enum";
+import { FormEvent, useEffect } from "react";
 import { useTodo } from "@/shared/TodoProvider";
 import priorities from "@/utils/PrioritiesData.json";
-import { FormEvent, useEffect, useState } from "react";
 import { useTodoRouter } from "@/shared/RouterProvider";
+import { useDatabase } from "@/shared/DbContextProvider";
 import { useFlagStates } from "@/shared/FlagStatesProvider";
-import { createTodo, readTodoDetails, updateTodo } from "@/database/operations";
 
 /**
  * Form: Represents a form component used for creating or updating todo items.
@@ -37,6 +37,8 @@ import { createTodo, readTodoDetails, updateTodo } from "@/database/operations";
 export default function Form({ type }: FormProps) {
   // Access router-related functions and parameters from the URL
   const { handleReturn, handleRedirect } = useTodoRouter()!;
+  const { readTodoDetails, createTodo, updateTodo } = useDatabase()!;
+
   const params = useParams<{ id: string }>();
 
   // Determine the form title based on the form type
@@ -64,7 +66,7 @@ export default function Form({ type }: FormProps) {
         }
       });
     }
-  }, [id, type, setTodoForFormValues]);
+  }, [id, type, setTodoForFormValues, readTodoDetails]);
 
   /**
    * handleCancel: Handles the cancel action in the form.

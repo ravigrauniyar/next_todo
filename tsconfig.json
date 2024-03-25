@@ -41,6 +41,9 @@
       "@/drizzle/*": [
         "./app/database/drizzle/*"
       ],
+      "@/prisma/*": [
+        "./app/database/prisma/*"
+      ],
       "@/todos/*": [
         "./app/todos/*"
       ],

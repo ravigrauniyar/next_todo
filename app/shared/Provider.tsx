@@ -1,6 +1,7 @@
 import { TodoProvider } from "./TodoProvider";
 import { RouterProvider } from "./RouterProvider";
 import { FlagStatesProvider } from "./FlagStatesProvider";
+import { DbContextProvider } from "./DbContextProvider";
 
 /**
  * Provider: A component that serves as a provider for its children components.
@@ -16,9 +17,11 @@ import { FlagStatesProvider } from "./FlagStatesProvider";
 export const Provider = ({ children }: ProviderProps) => {
   return (
     <RouterProvider>
-      <TodoProvider>
-        <FlagStatesProvider>{children}</FlagStatesProvider>
-      </TodoProvider>
+      <DbContextProvider>
+        <TodoProvider>
+          <FlagStatesProvider>{children}</FlagStatesProvider>
+        </TodoProvider>
+      </DbContextProvider>
     </RouterProvider>
   );
 };

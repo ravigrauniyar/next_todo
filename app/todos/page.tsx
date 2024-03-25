@@ -3,13 +3,12 @@
 import _ from "lodash";
 import "@/app/globals.css";
 import Image from "next/image";
-import { Todo } from "@/drizzle/schema";
 import Loading from "@/icons/Loading.svg";
 import { useEffect, useState } from "react";
 import { useTodo } from "@/shared/TodoProvider";
 import { TodoItem } from "@/components/TodoItem";
-import { readTodos } from "@/database/operations";
 import { useTodoRouter } from "@/shared/RouterProvider";
+import { useDatabase } from "@/shared/DbContextProvider";
 
 /**
  * TodoList: Represents the component for displaying a list of todo items.
@@ -33,6 +32,8 @@ export default function TodoList() {
   // Accessing router-related functions
   const { handleRedirect } = useTodoRouter()!;
 
+  const { readTodos } = useDatabase()!;
+
   // Managing loading state
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,9 +44,9 @@ export default function TodoList() {
       .then((todoList: Todo[]) => {
         setTodos(todoList);
       })
-      .catch((error) => console.error(error))
+      .catch((error: Error) => console.error(error))
       .finally(() => setLoading(false));
-  }, [setTodos]);
+  }, [readTodos, setTodos]);
 
   // Inline styles for scrollbar
   const scrollBarStyles =

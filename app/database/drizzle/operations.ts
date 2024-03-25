@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "./drizzle";
+import { db } from ".";
 import { eq } from "drizzle-orm";
 import { Todo, ViewTodo, todos } from "@/drizzle/schema";
 

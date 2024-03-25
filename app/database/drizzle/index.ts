@@ -5,7 +5,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 /**
  * URL: Represents the connection URL to the database.
  */
-const URL = process.env.DB_CONNECTION_URL;
+const URL = process.env.DRIZZLE_DB_URL;
 
 /**
  * sql: Represents the PostgreSQL client initialized with the provided connection URL.

@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS "todos" (
 	"title" varchar(256),
 	"description" varchar(256),
 	"priority" integer,
-	"created_at" date,
-	"updated_at" date
+	"isCompleted" boolean,
+	"created_at" varchar,
+	"updated_at" varchar
 );
