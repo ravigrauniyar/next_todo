@@ -3,7 +3,6 @@
 import _ from "lodash";
 import "@/app/globals.css";
 import Image from "next/image";
-import { DrizzleTodoDTO } from "@/drizzle/schema";
 import Loading from "@/icons/Loading.svg";
 import { useEffect, useState } from "react";
 import { useTodo } from "@/shared/TodoProvider";
