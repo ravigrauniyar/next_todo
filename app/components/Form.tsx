@@ -37,6 +37,8 @@ import { useFlagStates } from "@/shared/FlagStatesProvider";
 export default function Form({ type }: FormProps) {
   // Access router-related functions and parameters from the URL
   const { handleReturn, handleRedirect } = useTodoRouter()!;
+
+  // Access database-related functions for reading, creating, and updating todo items
   const { readTodoDetails, createTodo, updateTodo } = useDatabase()!;
 
   const params = useParams<{ id: string }>();
@@ -60,11 +62,13 @@ export default function Form({ type }: FormProps) {
   // Fetch todo item details when the component mounts, if it's an update form
   useEffect(() => {
     if (type === "Update" && id) {
-      readTodoDetails(id as string).then((todoDetail: Todo | undefined) => {
-        if (todoDetail) {
-          setTodoForFormValues(todoDetail);
+      readTodoDetails(id as string).then(
+        (todoDetail: DrizzleTodoDTO | TodoDTO | null | undefined) => {
+          if (todoDetail) {
+            setTodoForFormValues(todoDetail as TodoDTO);
+          }
         }
-      });
+      );
     }
   }, [id, type, setTodoForFormValues, readTodoDetails]);
 

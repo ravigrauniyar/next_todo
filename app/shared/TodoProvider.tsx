@@ -6,7 +6,7 @@ import {
   SetStateAction,
 } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Todo, ViewTodo } from "@/drizzle/schema";
+import { DrizzleTodoDTO, ViewDrizzleTodo } from "@/drizzle/schema";
 
 /**
  * TodoExample: Represents an example todo item.
@@ -22,7 +22,7 @@ export const TodoExample: TodoDTO = {
 };
 
 /**
- * ContextProps: Represents the props of the todo context.
+ * TodoContextProps: Represents the props of the todo context.
  *
  * Properties:
  * - todo: The currently selected todo item.
@@ -33,12 +33,12 @@ export const TodoExample: TodoDTO = {
  * - setTodoForFormValues: A function to update the todo item used for form values.
  */
 type TodoContextProps = {
-  todo: ViewTodo;
-  todos: Todo[] | null;
-  todoForFormValues: Todo;
-  setTodo: Dispatch<SetStateAction<ViewTodo>>;
-  setTodos: Dispatch<SetStateAction<Todo[] | null>>;
-  setTodoForFormValues: Dispatch<SetStateAction<Todo>>;
+  todo: ViewDrizzleTodo;
+  todos: DrizzleTodoDTO[] | null;
+  todoForFormValues: TodoDTO;
+  setTodo: Dispatch<SetStateAction<ViewDrizzleTodo>>;
+  setTodos: Dispatch<SetStateAction<DrizzleTodoDTO[] | null>>;
+  setTodoForFormValues: Dispatch<SetStateAction<TodoDTO>>;
 };
 
 /**

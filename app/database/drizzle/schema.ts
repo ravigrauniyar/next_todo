@@ -23,11 +23,11 @@ export const todos = pgTable("todos", {
 });
 
 /**
- * Todo: Represents the type of a todo item, inferred from the todos table structure.
+ * DrizzleTodoDTO: Represents the type of a todo item, inferred from the todos table structure.
  */
-export type Todo = typeof todos.$inferSelect;
+export type DrizzleTodoDTO = typeof todos.$inferSelect;
 
 /**
- * ViewTodo: Represents the type of a todo item used for insertion, inferred from the todos table structure.
+ * ViewDrizzleTodo: Represents the type of a todo item used for insertion, inferred from the todos table structure.
  */
-export type ViewTodo = typeof todos.$inferInsert;
+export type ViewDrizzleTodo = typeof todos.$inferInsert;

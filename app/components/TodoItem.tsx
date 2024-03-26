@@ -12,7 +12,7 @@ import { useTodoRouter } from "@/shared/RouterProvider";
  * - todo: The todo item to be displayed by the TodoItem component.
  */
 type TodoItemProps = {
-  todo: Todo;
+  todo: DrizzleTodoDTO;
 };
 
 /**

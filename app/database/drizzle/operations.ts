@@ -50,17 +50,18 @@ export type DrizzleDbProps = {
  *
  * @param todo A ViewDrizzleTodo object representing the todo item to be created.
  */
-export const createTodo = async (todo: ViewTodo) => {
-  return await db.insert(todos).values(todo);
+export const createTodo = async (todo: ViewDrizzleTodo) => {
+  // Insert the provided todo item into the database
+  await db.insert(todos).values(todo);
 };
 
 /**
  * readTodos: Retrieves a list of all todo items.
  *
- * @returns A Promise that resolves with an array of Todo objects, ordered by their updated_at timestamps in descending order.
+ * @returns A Promise that resolves with an array of DrizzleTodoDTO objects, ordered by their updated_at timestamps in descending order.
  */
 export const readTodos = async () => {
-  const todoList: Todo[] = await db.query.todos.findMany({
+  const todoList: DrizzleTodoDTO[] = await db.query.todos.findMany({
     orderBy: todos.updated_at,
   });
   return todoList.toReversed();
@@ -79,19 +80,17 @@ export const readTodoDetails = async (id: string) => {
 /**
  * updateTodo: Updates an existing todo item.
  *
- * @param todo A ViewTodo object representing the updated todo item.
- * @returns A Promise that resolves when the todo item is successfully updated.
+ * @param todo A ViewDrizzleTodo object representing the updated todo item.
  */
-export const updateTodo = async (todo: ViewTodo) => {
-  return await db.update(todos).set(todo).where(eq(todos.id, todo.id));
+export const updateTodo = async (todo: ViewDrizzleTodo) => {
+  await db.update(todos).set(todo).where(eq(todos.id, todo.id));
 };
 
 /**
  * deleteTodo: Deletes a todo item.
  *
  * @param id A string representing the unique identifier of the todo item to be deleted.
- * @returns A Promise that resolves when the todo item is successfully deleted.
  */
 export const deleteTodo = async (id: string) => {
-  return await db.delete(todos).where(eq(todos.id, id));
+  await db.delete(todos).where(eq(todos.id, id));
 };

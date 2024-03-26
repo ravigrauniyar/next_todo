@@ -43,7 +43,9 @@ export default function ViewTodo() {
 
   // Accessing todo-related context and state
   const { todo, setTodo } = useTodo()!;
-  const { deleteTodo, readTodoDetails } = useDatabase()!;
+
+  // Access database-related functions for fetching details and deleting todo items
+  const { readTodoDetails, deleteTodo } = useDatabase()!;
 
   // Managing loading state
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,9 +62,9 @@ export default function ViewTodo() {
       setLoading(true);
 
       readTodoDetails(id!)
-        .then((todoDetail: Todo | undefined) => {
+        .then((todoDetail: DrizzleTodoDTO | TodoDTO | null | undefined) => {
           if (todoDetail) {
-            setTodo(todoDetail);
+            setTodo(todoDetail as TodoDTO);
           } else {
             handleRedirect("/todos");
           }
@@ -95,7 +97,13 @@ export default function ViewTodo() {
     <div className="flex-center h-screen">
       <title>View | TODO</title>
       {loading || _.isEmpty(todo.title) ? (
-        <Image src={Loading} width={50} height={50} alt="LoadingIcon" />
+        <Image
+          src={Loading}
+          width={50}
+          height={50}
+          alt="LoadingIcon"
+          priority={true}
+        />
       ) : isUpdateFormOpen ? (
         <Form type="Update" />
       ) : isDeleteModalOpen ? (
@@ -107,7 +115,9 @@ export default function ViewTodo() {
         />
       ) : (
         <div className="flex flex-col p-5 bg-gray-600 w-[400px] rounded-sm gap-5">
-          <div className="text-[32px] font-[500] text-center">Todo</div>
+          <div className="text-[32px] font-[500] text-center">
+            DrizzleTodoDTO
+          </div>
           <div>{todo.title}</div>
           {todo.description && <div>{todo.description}</div>}
 

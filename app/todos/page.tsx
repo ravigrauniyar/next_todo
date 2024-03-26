@@ -3,6 +3,7 @@
 import _ from "lodash";
 import "@/app/globals.css";
 import Image from "next/image";
+import { DrizzleTodoDTO } from "@/drizzle/schema";
 import Loading from "@/icons/Loading.svg";
 import { useEffect, useState } from "react";
 import { useTodo } from "@/shared/TodoProvider";
@@ -33,6 +34,7 @@ export default function TodoList() {
   // Accessing router-related functions
   const { handleRedirect } = useTodoRouter()!;
 
+  // Access database-related function for reading todo items
   const { readTodos } = useDatabase()!;
 
   // Managing loading state
@@ -42,7 +44,7 @@ export default function TodoList() {
   useEffect(() => {
     setLoading(true);
     readTodos()
-      .then((todoList: Todo[]) => {
+      .then((todoList: DrizzleTodoDTO[]) => {
         setTodos(todoList);
       })
       .catch((error: Error) => console.error(error))
@@ -57,7 +59,13 @@ export default function TodoList() {
     <div className="flex-center h-screen">
       <title>Home | TODO</title>
       {loading || _.isNull(todos) ? (
-        <Image src={Loading} width={50} height={50} alt="LoadingIcon" />
+        <Image
+          src={Loading}
+          width={50}
+          height={50}
+          alt="LoadingIcon"
+          priority={true}
+        />
       ) : (
         <div className="flex flex-col w-2/5 bg-gray-600 p-5 rounded-sm h-[90vh]">
           {_.isEmpty(todos) ? (
