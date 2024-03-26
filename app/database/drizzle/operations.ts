@@ -2,13 +2,53 @@
 
 import { db } from ".";
 import { eq } from "drizzle-orm";
-import { Todo, ViewTodo, todos } from "@/drizzle/schema";
+import { DrizzleTodoDTO, ViewDrizzleTodo, todos } from "@/drizzle/schema";
 
 /**
- * createTodo: Creates a new todo item.
+ * DrizzleDbProps: Defines the interface for interacting with the database in the context of managing todo items.
+ */
+export type DrizzleDbProps = {
+  /**
+   * createTodo: Creates a new todo item in the database.
+   *
+   * @param todo A ViewDrizzleTodo object representing the todo item to be created.
+   */
+  createTodo: (todo: ViewDrizzleTodo) => Promise<void>;
+
+  /**
+   * readTodos: Retrieves all todo items from the database.
+   *
+   * @returns A Promise that resolves to an array of DrizzleTodoDTO objects.
+   */
+  readTodos: () => Promise<DrizzleTodoDTO[]>;
+
+  /**
+   * readTodoDetails: Retrieves details of a specific todo item from the database.
+   *
+   * @param id The ID of the todo item to retrieve details for.
+   * @returns A Promise that resolves to a DrizzleTodoDTO object if found, otherwise undefined.
+   */
+  readTodoDetails: (id: string) => Promise<DrizzleTodoDTO | undefined>;
+
+  /**
+   * updateTodo: Updates an existing todo item in the database.
+   *
+   * @param todo A ViewDrizzleTodo object representing the updated todo item.
+   */
+  updateTodo: (todo: ViewDrizzleTodo) => Promise<void>;
+
+  /**
+   * deleteTodo: Deletes a todo item from the database.
+   *
+   * @param id The ID of the todo item to delete.
+   */
+  deleteTodo: (id: string) => Promise<void>;
+};
+
+/**
+ * createTodo: Creates a new todo item in the database.
  *
- * @param todo A ViewTodo object representing the todo item to be created.
- * @returns A Promise that resolves when the todo item is successfully created.
+ * @param todo A ViewDrizzleTodo object representing the todo item to be created.
  */
 export const createTodo = async (todo: ViewTodo) => {
   return await db.insert(todos).values(todo);

@@ -7,6 +7,7 @@ import Loading from "@/icons/Loading.svg";
 import { useEffect, useState } from "react";
 import { useTodo } from "@/shared/TodoProvider";
 import { TodoItem } from "@/components/TodoItem";
+import { DrizzleTodoDTO } from "@/drizzle/schema";
 import { useTodoRouter } from "@/shared/RouterProvider";
 import { useDatabase } from "@/shared/DbContextProvider";
 

@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from "uuid";
 import { Todo, ViewTodo } from "@/drizzle/schema";
 
 /**
- * todoExample: Represents an example todo item.
+ * TodoExample: Represents an example todo item.
  */
-export const todoExample: Todo = {
+export const TodoExample: TodoDTO = {
   id: uuidv4(),
   title: "",
   description: "",
@@ -61,10 +61,11 @@ export const useTodo = () => useContext(TodoContext);
  * - children: React node representing the children components.
  */
 export const TodoProvider = ({ children }: ProviderProps) => {
-  // Initialize todo-related state
-  const [todo, setTodo] = useState<ViewTodo>(todoExample);
-  const [todos, setTodos] = useState<Todo[] | null>(null);
-  const [todoForFormValues, setTodoForFormValues] = useState<Todo>(todoExample);
+  // Initialize todo-related states
+  const [todo, setTodo] = useState<ViewDrizzleTodo>(TodoExample);
+  const [todos, setTodos] = useState<DrizzleTodoDTO[] | null>(null);
+  const [todoForFormValues, setTodoForFormValues] =
+    useState<TodoDTO>(TodoExample);
 
   // Create a shared context value
   const shared: TodoContextProps = {

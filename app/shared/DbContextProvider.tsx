@@ -1,29 +1,36 @@
-// Import React if you're using React hooks
+// Import necessary dependencies from React and external libraries
 import { createContext, useContext } from "react";
-// Import methods from Prisma
-import * as prismaMethods from "@/prisma/operations";
-// Import methods from Drizzle
-import * as drizzleMethods from "@/drizzle/operations";
 
-type DbContextProps = {
-  createTodo: any;
-  readTodos: any;
-  readTodoDetails: any;
-  updateTodo: any;
-  deleteTodo: any;
-};
+// Import methods from Prisma and Drizzle
+import * as PrismaDb from "@/prisma/operations";
+import * as DrizzleDb from "@/drizzle/operations";
 
+// Define a type that can hold props for both Prisma and Drizzle operations
+export type DbContextProps = DrizzleDb.DrizzleDbProps | PrismaDbProps;
+
+// Create a context for database operations
 const DbContext = createContext<DbContextProps | null>(null);
+
+/**
+ * useDatabase: A custom hook to access the database context.
+ * Returns an object containing database methods.
+ */
 export const useDatabase = () => useContext(DbContext);
 
+/**
+ * DbContextProvider: A component to provide database context to its children.
+ *
+ * Props:
+ * - children: React node representing the children components.
+ */
 export const DbContextProvider = ({ children }: ProviderProps) => {
-  // Check the environment variable to determine the ORM type
-  const databaseMethods: DbContextProps =
-    process.env.IS_ORM_TYPE_DRIZZLE === "true"
-      ? { ...drizzleMethods }
-      : { ...prismaMethods };
+  // Determine whether to use Prisma or Drizzle based on an environment variable
+  const isORMTypeDrizzle =
+    process.env.NEXT_PUBLIC_IS_ORM_TYPE_DRIZZLE === "true";
 
-  return (
-    <DbContext.Provider value={databaseMethods}>{children}</DbContext.Provider>
-  );
+  // Choose the appropriate database methods based on the environment variable
+  const shared = isORMTypeDrizzle ? DrizzleDb : PrismaDb;
+
+  // Provide the context value to its children
+  return <DbContext.Provider value={shared}>{children}</DbContext.Provider>;
 };

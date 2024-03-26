@@ -1,7 +1,7 @@
 "use client";
 
-import { Todo } from "@/drizzle/schema";
 import { StatusColor } from "./constants.enum";
+import { DrizzleTodoDTO } from "@/drizzle/schema";
 import priorities from "@/utils/PrioritiesData.json";
 import { useTodoRouter } from "@/shared/RouterProvider";
 

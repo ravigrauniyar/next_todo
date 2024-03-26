@@ -1,10 +1,10 @@
 # TODO App
 
-A simple TODO application built with Next.js, TypeScript, Context API & Drizzle framework with PostgreSQL for managing tasks and their statuses.
+A simple TODO application built with Next JS, TypeScript, Context API, Drizzle & Prisma framework with PostgreSQL for managing tasks and their statuses.
 
 ## Installation
 
-1. Clone the repository.
+1. Clone this repository.
 2. Install dependencies using `npm install`.
 
 ## Usage
